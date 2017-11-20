@@ -1,0 +1,115 @@
+if v:progname =~? "evim"
+  finish
+endif
+
+" Get the defaults that most users want.
+source $VIMRUNTIME/defaults.vim
+
+if &t_Co > 2 || has("gui_running")
+  " Switch on highlighting the last used search pattern.
+  set hlsearch 
+endif
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx au!
+
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
+
+  augroup END
+
+else
+
+  set autoindent		" always set autoindenting on
+
+endif " has("autocmd")
+
+" Add optional packages.
+"
+" The matchit plugin makes the % command work better, but it is not backwards
+" compatible.
+if has('syntax') && has('eval') 
+	packadd matchit 
+endif
+
+call plug#begin('~/.vim/plugged') 
+	Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } 
+	Plug 'https://github.com/pangloss/vim-javascript' 
+	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+    Plug 'https://github.com/mxw/vim-jsx'
+    Plug 'https://github.com/w0rp/ale.git'
+    Plug 'https://github.com/tpope/vim-classpath.git'
+    Plug 'https://github.com/joshdick/onedark.vim.git'
+    Plug 'https://github.com/sheerun/vim-polyglot.git'
+    Plug 'https://github.com/ton/vim-bufsurf.git'
+call plug#end()
+
+let g:jsx_ext_required = 0
+
+set tabstop=4       " The width of a TAB is set to 4.
+                    " Still it is a \t. It is just that
+                    " Vim will interpret it to be having
+                    " a width of 4.
+
+set shiftwidth=4    " Indents will have a width of 4
+
+set softtabstop=4   " Sets the number of columns for a TAB
+
+set expandtab       " Expand TABs to spaces
+
+" Nerdtree config
+autocmd vimenter *NERDTree
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+if (empty($TMUX))
+    if (has("nvim"))
+        let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    endif
+    if (has("termguicolors"))
+        set termguicolors
+    endif
+endif
+
+syntax on
+" onedark.vim override: Don't set a background color when running in a
+" terminal;
+" " just use the terminal's background color
+" " `gui` is the hex color code used in GUI mode/nvim true-color mode
+" " `cterm` is the color code used in 256-color mode
+" " `cterm16` is the color code used in 16-color mode
+if (has("autocmd") && !has("gui_running"))
+    let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
+    autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg":s:white }) " No `bg` setting
+end
+colorscheme onedark
+
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
+" Display line-numbers on the left
+set number
+
+" proper jump to first char on line
+map 0 ^
+
+" buf surfer
+noremap <Esc>q :w <bar> :BufSurfBack<CR>
+noremap <Esc>w :w <bar> :BufSurfForward<CR>
+
+" map reading macro
+let a = 'What is it about?, purpose?'
+let b = 'Main point?'
+let c = 'How is it solved?'
+let d = 'Questions?'
+noremap <Esc>p :1put=a <CR> :2put=b <CR> :3put=c <CR> :4put=d <CR>
