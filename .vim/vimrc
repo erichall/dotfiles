@@ -46,6 +46,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'https://github.com/joshdick/onedark.vim.git'
     Plug 'https://github.com/sheerun/vim-polyglot.git'
     Plug 'https://github.com/ton/vim-bufsurf.git'
+    Plug 'https://github.com/tpope/vim-commentary.git'
+    Plug 'https://github.com/kien/ctrlp.vim.git'
+    Plug 'https://github.com/skywind3000/asyncrun.vim.git'
 call plug#end()
 
 let g:jsx_ext_required = 0
@@ -113,3 +116,22 @@ let b = 'Main point?'
 let c = 'How is it solved?'
 let d = 'Questions?'
 noremap <Esc>p :1put=a <CR> :2put=b <CR> :3put=c <CR> :4put=d <CR>
+
+" fast file search awesomeness
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+" Because Vim doesn't like
+" pasting that works.
+
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+function! XTermPasteBegin()
+    set pastetoggle=<Esc>[201~
+        set paste
+            return ""
+endfunction
+
