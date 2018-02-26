@@ -1,0 +1,10 @@
+[Unit]
+Description=Run every minute
+
+[Timer]
+OnCalendar=*:0/1
+Persistent=true
+Unit=battery-notification.service
+
+[Install]
+WantedBy=timers.target

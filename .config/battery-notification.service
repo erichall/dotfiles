@@ -1,0 +1,6 @@
+[unit]
+Description=Battery notification service
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/home/erkan/.config/i3/battery-warning.sh
